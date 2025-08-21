@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSVP DETAILS</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url("background-KI.jpg") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #ffffffcc;
+      display: flex; /* Menggunakan Flexbox untuk memposisikan kontainer */
+      justify-content: center; /* Memposisikan kontainer secara horizontal */
+      align-items: center; /* Memposisikan kontainer secara vertikal */
+      height: 100vh; /* Tinggi halaman penuh */
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 40px;
+      background: rgba(0, 0, 0, 0.012); /* Background transparan */
+      border-radius: 30px;
+      margin-top: 30px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Efek bayangan */
+    }
+
+    h2 {
+      text-align: center;
+      font-family: 'futura', cursive; /* Font family bergaya tulisan tangan */
+      font-size: 2rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-family: 'Segoe UI', 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS'; /* Font family utama */
+      font-size: 1rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 100px;
+      border: none;
+      background: #ffffffcc; /* Background input transparan */
+      color: #000; /* Warna teks hitam */
+      font-family: 'calibri', sans-serif; /* Font family utama */
+    }
+
+    button {
+      margin-top: 55px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #FFD1D1;
+      color: #50042f;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: 'Segoe UI', sans-serif;
+      transition: background 1s ease; /* Animasi transisi untuk hover */
+    }
+
+    button:hover {
+      background: #14d8ff;
+    }
+    #thankYouMessage {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      font-family: 'Segoe UI', sans-serif;
+      z-index: 1000;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>RSVP</h2>
+    <form id="rsvpForm" method="POST" action="/submit">
+      <label for="nama">Write your Full Name:</label>
+      <input type="text" id="nama" name="nama" required>
+
+      <label for="email">E-mail:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="kehadiran">Will you attend to the thesis defence?</label>
+      <select id="kehadiran" name="kehadiran" required>
+        <option value="Yes, I will be there!">Yes, I will be there!</option>
+        <option value="Sorry, I won't be able to attend">Sorry, I won't be able to attend</option>
+        <option value="Yes, I would like to join later after the defence">Yes, I would like to join later after the defence</option>
+      </select>
+
+      <label for="media">How would you like to attend?</label>
+      <select id="media" name="media" required>
+        <option value="At the venue">At the venue</option>
+        <option value="Via Zoom (if available)">Via Zoom (if available)</option>
+      </select>
+
+      <label for="komentar">Leave your wishes!</label>
+      <textarea id="komentar" name="komentar" maxlength="5000"></textarea>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <button type="submit" style="font-size: 18px; width: auto; display: inline-block; text-decoration: none; color: #ffffff; background: #ebebeb00; padding: 10px 20px; border-radius: 100px; font-weight: bold; font-family: 'Segoe UI', sans-serif; text-align: center; cursor: pointer; box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);">
+          SEND
+        </button>
+      </div>
+    </form>
+
+    <!-- Tombol BACK -->
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="index.html" style="width: auto; display: inline-block; text-decoration: none; color: #ffffff; background: #ebebeb00; padding: 10px 20px; border-radius: 100px; font-weight: bold; font-family: 'Segoe UI', sans-serif; text-align: center; cursor: pointer; box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);">
+        BACK
+      </a>
+    </div>
+
+    <!-- Floating Thumbnail -->
+    <div id="thankYouMessage" style="display: none;">
+      <h2>Thank you!</h2>
+      <p>Your data is submitted!</p>
+      <p>Wish me luck! See you soon!</p>
+    </div>
+  </div>
+
+  <!-- JavaScript untuk menangani pengiriman formulir -->
+  <script>
+    document.getElementById("rsvpForm").addEventListener("submit", async function (event) {
+      event.preventDefault(); // Mencegah pengiriman formulir secara default
+
+      const formData = new FormData(this);
+
+      try {
+        const response = await fetch("/submit", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Sembunyikan formulir dan tampilkan pesan "Thank You"
+          document.getElementById("rsvpForm").style.display = "none";
+          const thankYouMessage = document.getElementById("thankYouMessage");
+          thankYouMessage.style.display = "block";
+          thankYouMessage.innerHTML = `
+            <h2>Thank You Sir & Madam! We will send you a confirmation email. 
+              <br> wish me luck! See you soon!
+              </h2>
+            <p>${result.message}</p>
+          `;
+        } else {
+          alert(result.message); // Tampilkan pesan error jika gagal
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        alert("An error occurred. Please try again.");
+      }
+    });
+  </script>
+      
+        <!-- Footer -->
+<footer style="text-align: center; margin-top: 20px;
+ font-size: 0.5rem; color: #ffffff; font-family: 'Segoe UI', sans-serif;">
+  <div id="countdown" style="margin-bottom: 10px;"></div>
+  <p>&copy; 2025 Aurino M. Kemas. All rights reserved.</p>
+</footer>
+
+  </div>
+</body>
+</html>
