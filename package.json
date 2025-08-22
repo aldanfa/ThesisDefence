@@ -1,0 +1,25 @@
+{
+  "name": "thesisdefence",
+  "version": "1.0.0",
+  "description": "for RSVP Thesis Defence Event",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aldanfa/ThesisDefence.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aldanfa/ThesisDefence/issues"
+  },
+  "homepage": "https://github.com/aldanfa/ThesisDefence#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}
